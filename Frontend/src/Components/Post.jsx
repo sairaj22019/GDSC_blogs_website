@@ -9,7 +9,7 @@ const Post = ({_id,title,summary,content,cover,createdAt,author}) => {
     <div className="post flex h-fit pt-4 gap-2 ">
         <div className="image min-w-[45%] max-w-[55%]">
           <Link to={`/post/${_id}`}>
-        <img src={`${import.meta.env.VITE_API_BASE_URL}/${cover}`}  alt="Image" className=" rounded-sm mt-1" />
+        <img src={`${import.meta.env.VITE_API_BASE_URL}/${cover}`}  alt="Image" className=" rounded-sm mt-1 w-full h-56 object-cover" />
           </Link>
         </div>
         <div className="text flex flex-col gap-4">
