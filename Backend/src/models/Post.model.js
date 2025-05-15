@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose , {Schema} from "mongoose";
 
 const postSchema = new mongoose.Schema({
     title : {
@@ -17,10 +17,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required : true
     },
-    // author : {
-    //     type:Schema.Types.ObjectId,
-    //     ref:'User',
-    // }
+    author : {
+        type:Schema.Types.ObjectId,
+        ref:'User',
+    }
 },{timestamps:true})
 
 export const Post = mongoose.model("Post" , postSchema)

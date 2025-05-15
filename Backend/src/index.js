@@ -9,11 +9,19 @@ import cookieParser from "cookie-parser"
 import { uploadMiddleWare } from './middlewares/Multer.middleware.js';
 import fs from 'fs'
 import { Post } from './models/Post.model.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 dotenv.config();
 const app = express()
 app.use(cors({credentials:true,origin:process.env.CORS_ORIGIN}))
 app.use(express.json())
 app.use(cookieParser())
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use('/Uploads', express.static(path.join(__dirname, 'Uploads')));
+console.log(path.join(__dirname, 'Uploads'));
 
 
 async function startServer() {
@@ -105,12 +113,12 @@ app.post('/post',uploadMiddleWare.single('file') ,async (req,res)=>{
     }
         const {title , summary , content} = req.body
         try {
-      const postDoc = await Post.create({
+        const postDoc = await Post.create({
         title,
         summary,
         content,
         cover: newPath,
-        // author: info.id,
+        author: info.id,
       });
 
       res.json(postDoc);
@@ -124,8 +132,15 @@ app.post('/post',uploadMiddleWare.single('file') ,async (req,res)=>{
 
 
 app.get('/post' , async (req,res)=>{
-    res.json( await Post.find())
+    res.json( await Post.find()
+    .populate('author',['username'])
+    .sort({createdAt:-1})
+    .limit(15)
+)
 })
 
-
-
+app.get('/post/:id' , async(req,res)=>{
+    const {id} = req.params
+    const PostDoc = await Post.findById(id).populate('author' , ['username'])
+    res.json(PostDoc)
+})
